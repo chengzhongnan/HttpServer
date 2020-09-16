@@ -57,8 +57,6 @@ namespace HttpServerLib
 
             server.AllowForwardedRequest = true;
 
-            server.OnConnect += Server_OnConnect;
-            server.OnDelete += Server_OnDelete;
             server.OnGet += Server_OnGet;
             server.OnPost += Server_OnPost;
 
@@ -75,7 +73,7 @@ namespace HttpServerLib
             handlerSerializeParamer_Post.Clear();
         }
 
-        private async void Server_OnPost(object sender, HttpRequestEventArgs e)
+        private async Task Server_OnPost(object sender, HttpRequestEventArgs e)
         {
             try
             {
@@ -110,13 +108,7 @@ namespace HttpServerLib
             }
         }
 
-        //private async void ProcessHandlerPost(HttpRequestEventArgs e)
-        //{
-        //    var body = new System.IO.StreamReader(e.Request.InputStream).ReadToEnd();
-        //    await ProcessHandler(e, true, body);
-        //}
-
-        private async void Server_OnGet(object sender, HttpRequestEventArgs e)
+        private async Task Server_OnGet(object sender, HttpRequestEventArgs e)
         {
             try
             {
@@ -126,16 +118,6 @@ namespace HttpServerLib
             {
                 Log?.Error(ex.Message, ex);
             }
-        }
-
-        private void Server_OnDelete(object sender, HttpRequestEventArgs e)
-        {
-            Log?.Debug("delete");
-        }
-
-        private void Server_OnConnect(object sender, HttpRequestEventArgs e)
-        {
-            Log?.Debug("connect");
         }
 
         private Dictionary<string, Type> handlerDic_Get = new Dictionary<string, Type>();
@@ -294,9 +276,7 @@ namespace HttpServerLib
                     response.ContentType = fo.ContentType;
 
                     response.StatusCode = 200;
-                    // response.WriteContent(fo.FileBuffer);
                     await response.OutputStream.WriteAsync(fo.FileBuffer, 0, fo.FileBuffer.Length);
-                    response.OutputStream.Close();
 
                     return true;
                 }
@@ -314,7 +294,6 @@ namespace HttpServerLib
             response.StatusCode = 200;
             var fileBuffer = System.IO.File.ReadAllBytes(filePath);
             await response.OutputStream.WriteAsync(fileBuffer, 0, fileBuffer.Length);
-            response.OutputStream.Close();
 
             if (CacheFile)
             {
@@ -466,7 +445,6 @@ namespace HttpServerLib
                                 Log?.Error(info);
                                 var buffer = DefaultEncoding.GetBytes(info);
                                 await e.Response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-                                e.Response.OutputStream.Close();
                                 return e.Response;
                             }
                             else
@@ -644,7 +622,6 @@ namespace HttpServerLib
                     // WebSocketSharp.Ext.WriteContent(resp, );
                     var buffer = Encoding.UTF8.GetBytes(content);
                     await resp.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-                    resp.OutputStream.Close();
                     return resp;
                 }
             });
