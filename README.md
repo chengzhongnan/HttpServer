@@ -31,6 +31,7 @@
     
 2.编写一个继承于HttpServerHandlerBase的类，在类中设置path和回调响应函数，每个类需要添加HttpGet或HttpPost，否则回调将无法响应
   类成员的变量指定HttpField属性，与http请求的参数映射
+  
     [HttpGet]
     class HelloWorld : HttpServerHandlerBase
     {
@@ -46,6 +47,7 @@
     }
 
 3. 在Main中启动Http服务器
+
    static void Main(string[] args)
         {
             HttpService http = new HttpService();
