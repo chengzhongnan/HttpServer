@@ -19,6 +19,7 @@ namespace Example
             var http = new HttpServerHandlerManager(this);
             http.CreateInstance(IPAddress.Parse("0.0.0.0"), 8080);
             http.RegisterHandler(Assembly.GetEntryAssembly());
+            http.Log = new WebSocketSharp.Logger(WebSocketSharp.LogLevel.Debug, null, (data, file) => { Console.WriteLine(data); });
 
             http.RegisterDirectory("/static", "./");
             Console.WriteLine("Start listening at http://0.0.0.0/8080");

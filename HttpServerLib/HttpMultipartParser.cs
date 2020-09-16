@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using log4net;
+using WebSocketSharp;
 
 /// <summary>
 /// HttpMultipartParser
@@ -81,7 +81,7 @@ namespace HttpServerLib
             Parse();
         }
 
-        public MultipartObject(string boundary, byte[] buff, ILog log)
+        public MultipartObject(string boundary, byte[] buff, Logger log)
         {
             Encoding = Encoding.UTF8;
             Boundary = boundary;
@@ -100,7 +100,7 @@ namespace HttpServerLib
             Parse();
         }
 
-        public MultipartObject(string boundary, byte[] buff, Encoding encoding, ILog log)
+        public MultipartObject(string boundary, byte[] buff, Encoding encoding, Logger log)
         {
             Encoding = encoding;
             Boundary = boundary;
@@ -110,7 +110,7 @@ namespace HttpServerLib
             Parse();
         }
 
-        private ILog _Log { get; set; }
+        private Logger _Log { get; set; }
         private string Boundary { get; set; }
         private byte[] Buffer { get; set; }
         private Encoding Encoding { get; set; }
@@ -225,7 +225,7 @@ namespace HttpServerLib
             }
             catch(Exception ex)
             {
-                _Log?.Error(ex.Message, ex);
+                _Log?.Error(ex.ToString());
             }
         }
 

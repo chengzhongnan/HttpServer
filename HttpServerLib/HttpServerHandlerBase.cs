@@ -1,5 +1,4 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -24,8 +23,8 @@ namespace HttpServerLib
             _state = state;
         }
 
-        private ILog _Log = null;
-        public ILog Log
+        private Logger _Log = null;
+        public Logger Log
         {
             get
             {
@@ -104,7 +103,7 @@ namespace HttpServerLib
             }
             catch(Exception ex)
             {
-                Log?.Error(ex.Message, ex);
+                Log?.Error(ex.ToString());
             }
         }
 
@@ -116,7 +115,7 @@ namespace HttpServerLib
             }
             catch(Exception ex)
             {
-                Log?.Error(ex.Message, ex);
+                Log?.Error(ex.ToString());
             }
         }
 
@@ -466,6 +465,7 @@ namespace HttpServerLib
                     handlerBase.RemoteIP = e.Request.RemoteEndPoint.Address.ToString();
                     handlerBase.Boundary = GetRequestBoundary(e.Request);
                     handlerBase.QueryString = e.Request.RawUrl;
+                    handlerBase.Log = Log;
 
                     var retValue = await handlerBase.ExecAsync(response, _state);
 
@@ -481,7 +481,7 @@ namespace HttpServerLib
             {
                 response.Close();
                 Log?.Error(e.Request.RawUrl);
-                Log?.Error(ex.Message, ex);
+                Log?.Error(ex.ToString());
                 return response;
             }
         }
@@ -553,11 +553,17 @@ namespace HttpServerLib
         /// </summary>
         public string QueryString { get; set; }
 
-        protected ILog Log
+        private Logger _Log = null;
+
+        internal Logger Log
         {
             get
             {
-                return LogManager.GetLogger(GetType());
+                return _Log;
+            }
+            set
+            {
+                _Log = value;
             }
         }
 
@@ -611,7 +617,7 @@ namespace HttpServerLib
                     content = string.Empty;
                 }
 
-                Log.Info(content);
+                Log?.Info(content);
 
                 if (resp.CheckDisposedOrHeadersSent())
                 {
