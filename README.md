@@ -47,17 +47,17 @@
     }
 
 3. 在Main中启动Http服务器
-
-    static void Main(string[] args)
-    {
-        HttpService http = new HttpService();
-        http.Start();
-        while(true)
+    
+        static void Main(string[] args)
         {
-            if (Console.ReadLine() == "q")
+            HttpService http = new HttpService();
+            http.Start();
+            while(true)
             {
-                break;
+                if (Console.ReadLine() == "q")
+                {
+                    break;
+                }
             }
+            http.Stop();
         }
-        http.Stop();
-    }
