@@ -16,7 +16,7 @@
             http.CreateInstance(IPAddress.Parse("0.0.0.0"), 8080);
             // 注册程序集下所有http函数
             http.RegisterHandler(Assembly.GetEntryAssembly());
-
+            // 注册当前目前下的文件，响应到/static的path下，比如/static/index.html，将返回当前目录下的index.html
             http.RegisterDirectory("/static", "./");
             Console.WriteLine("Start listening at http://0.0.0.0/8080");
         }
