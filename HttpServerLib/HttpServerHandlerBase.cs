@@ -276,6 +276,7 @@ namespace HttpServerLib
                     response.ContentType = fo.ContentType;
 
                     response.StatusCode = 200;
+                    response.ContentLength64 = fo.FileBuffer.Length;
                     await response.OutputStream.WriteAsync(fo.FileBuffer, 0, fo.FileBuffer.Length);
 
                     return true;
@@ -294,6 +295,7 @@ namespace HttpServerLib
             response.StatusCode = 200;
             var fileBuffer = System.IO.File.ReadAllBytes(filePath);
             await response.OutputStream.WriteAsync(fileBuffer, 0, fileBuffer.Length);
+            response.ContentLength64 = fileBuffer.Length;
 
             if (CacheFile)
             {
@@ -327,6 +329,7 @@ namespace HttpServerLib
             }
             response.StatusCode = 404;
             var buffer = DefaultEncoding.GetBytes("page not found");
+            response.ContentLength64 = buffer.Length;
             await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
         }
 
@@ -444,6 +447,7 @@ namespace HttpServerLib
                                 var info = $"paramer is invalid: {paramer.Field} is null";
                                 Log?.Error(info);
                                 var buffer = DefaultEncoding.GetBytes(info);
+                                e.Response.ContentLength64 = buffer.Length;
                                 await e.Response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
                                 return e.Response;
                             }
@@ -616,11 +620,10 @@ namespace HttpServerLib
                 else
                 {
                     resp.StatusCode = StatusCode;
-                    resp.ContentLength64 = content.Length;
                     resp.ContentEncoding = Encoding.UTF8;
                     resp.ContentType = "application/json";
-                    // WebSocketSharp.Ext.WriteContent(resp, );
                     var buffer = Encoding.UTF8.GetBytes(content);
+                    resp.ContentLength64 = buffer.Length;
                     await resp.OutputStream.WriteAsync(buffer, 0, buffer.Length);
                     return resp;
                 }
