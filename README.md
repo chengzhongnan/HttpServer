@@ -1,8 +1,8 @@
 # 一个简单的Http服务器
-使用方法
+##使用方法
 
 1.编写一个监听注册类或函数，在其中设置监听端口，并且注册http回调
-
+```csharp
     class HttpService
     {
         public HttpService()
@@ -28,10 +28,9 @@
             http?.Release();
         }
     }
-    
-2.编写一个继承于HttpServerHandlerBase的类，在类中设置path和回调响应函数，每个类需要添加HttpGet或HttpPost，否则回调将无法响应
-  类成员的变量指定HttpField属性，与http请求的参数映射
-  
+```
+2.编写一个继承于HttpServerHandlerBase的类，在类中设置path和回调响应函数，每个类需要添加HttpGet或HttpPost，否则回调将无法响应类成员的变量指定HttpField属性，与http请求的参数映射
+```csharp
     [HttpGet]
     class HelloWorld : HttpServerHandlerBase
     {
@@ -46,8 +45,9 @@
         }
     }
 
-3. 在Main中启动Http服务器
-
+```
+3.在Main中启动Http服务器
+```csharp
     static void Main(string[] args)
     {
         HttpService http = new HttpService();
@@ -61,3 +61,5 @@
         }
         http.Stop();
     }
+
+```
